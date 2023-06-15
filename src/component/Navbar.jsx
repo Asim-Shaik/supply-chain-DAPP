@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import { Transition } from "@headlessui/react";
 import bductLogo from "../assets/bducticon.png";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../redux/user";
 
 const Navbar = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const role = useSelector((state) => state.user.currentUser?.role);
+  console.log(role);
+  const dispatch = useDispatch();
 
   return (
     <div>
@@ -16,27 +21,33 @@ const Navbar = ({ children }) => {
               </div>
               <div className="hidden md:block">
                 <div className="ml-10 flex items-baseline space-x-4">
+                 
                   <a
-                    href="/"
+                    href="/dashboard/check-products"
                     className=" hover:bg-gray-700 text-white px-3 py-2 rounded-md text-sm font-medium"
                   >
                     Check Products
                   </a>
-
-                  <a
-                    href="/add"
-                    className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                  >
-                    Add Products
-                  </a>
-
-                  <a
-                    href="/scanshipment"
-                    className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                  >
-                    Scan Shipment
-                  </a>
-
+                 
+                  {role === "Manufacturer" ? (
+                    <a
+                      href="/dashboard/add"
+                      className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                    >
+                      Add Product
+                    </a>
+                  ) : null}
+                  
+                  {role === "Distributor" || role === "Retailer" ? (
+                    <a
+                      href="/dashboard/scanshipment"
+                      className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                    >
+                      Scan Shipment
+                    </a>
+                  ) : null}
+                    
+                  
                   <a
                     href="#"
                     className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
@@ -46,7 +57,13 @@ const Navbar = ({ children }) => {
                 </div>
               </div>
             </div>
-            <div className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium hidden md:block">
+            <div
+              className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium hidden md:block"
+              onClick={() => {
+                dispatch(logout());
+                 window.location.replace("/login")
+              }}
+            >
               Logout
             </div>
             <div className="-mr-2 flex md:hidden">
@@ -109,25 +126,29 @@ const Navbar = ({ children }) => {
             <div className="md:hidden" id="mobile-menu">
               <div ref={ref} className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                 <a
-                  href="/"
+                  href="/dashboard/check-products"
                   className="hover:bg-gray-700 text-white block px-3 py-2 rounded-md text-base font-medium"
                 >
                   Check Product
                 </a>
 
-                <a
-                  href="/add"
-                  className="text-white hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                >
-                  Add Products
-                </a>
+                  {role === "Manufacturer" ? (
+                    <a
+                      href="/dashboard/add"
+                      className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                    >
+                      Add Product
+                    </a>
+                  ) : null}
 
-                <a
-                  href="/scanshipment"
-                  className="text-white hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                >
-                  Scan Shipment
-                </a>
+                  {role === "Distributor" || role === "Retailer" ? (
+                    <a
+                      href="/dashboard/scanshipment"
+                      className="text-white hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                    >
+                      Scan Shipment
+                    </a>
+                  ) : null}
 
                 <a
                   href="#"
@@ -138,6 +159,10 @@ const Navbar = ({ children }) => {
                 <a
                   href="#"
                   className="text-white hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                  onClick={() => {
+                    dispatch(logout());
+                     window.location.replace("/login")
+                  }}
                 >
                   Logout
                 </a>
